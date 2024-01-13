@@ -2,38 +2,38 @@ package com.example.fooddiary.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.example.fooddiary.database.DBItem
-import com.example.fooddiary.repositories.MyRepo
+import com.example.fooddiary.database.Item
+import com.example.fooddiary.repositories.ItemRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 
-class HomeViewModel @Inject constructor(private val myRepo: MyRepo) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val itemRepository: ItemRepository) : ViewModel() {
 
-    val itemsList : LiveData<List<DBItem>> = myRepo.dataList
-    val foundItem : LiveData<DBItem> = myRepo.foundItem
+    val itemsList : LiveData<List<Item>> = itemRepository.dataList
+    val foundItem : LiveData<Item> = itemRepository.foundItem
 
     fun getAllItems(){
-        myRepo.getAllItems()
+        itemRepository.getAllItems()
+    }
+    fun addItem(item: Item){
+        itemRepository.addItem(item)
+        itemRepository.getAllItems()
     }
 
-    fun addItem(item: DBItem){
-        myRepo.addItem(item)
-        myRepo.getAllItems()
+    fun updateItem(item: Item){
+        itemRepository.updateItem(item)
+        itemRepository.getAllItems()
     }
 
-
-    fun updateItem(item: DBItem){
-        myRepo.updateItem(item)
-        myRepo.getAllItems()
-    }
-
-    fun deleteItem(item: DBItem){
-        myRepo.deleteItem(item)
-        myRepo.getAllItems()
+    fun deleteItem(item: Item){
+        itemRepository.deleteItem(item)
+        itemRepository.getAllItems()
     }
 
     fun findItemById(id: Int){
-        myRepo.findItemById(id)
+        itemRepository.findItemById(id)
     }
 
 }

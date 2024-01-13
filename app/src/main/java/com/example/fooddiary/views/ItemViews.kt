@@ -1,4 +1,4 @@
-package com.example.fooddiary.items_views
+package com.example.fooddiary.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -35,26 +34,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.fooddiary.R
-import com.example.fooddiary.database.DBItem
+import com.example.fooddiary.database.Item
 import com.example.fooddiary.viewmodels.HomeViewModel
 
 @Composable
-fun ItemCard(dbItem: DBItem, navController : NavHostController){
+fun ItemCard(item: Item, navController : NavHostController){
     Row(modifier = Modifier.padding(all = 8.dp)){
 
         Image(
-            painter = painterResource(id = dbItem.drawableResource),
+            painter = painterResource(id = item.drawableResource),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -64,14 +59,14 @@ fun ItemCard(dbItem: DBItem, navController : NavHostController){
         Spacer(modifier = Modifier.width(8.dp))
 
         Column {
-            Text(text = dbItem.title,
+            Text(text = item.title,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.titleSmall)
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Surface(shape = MaterialTheme.shapes.medium, shadowElevation = 1.dp){
-                Text(text = "Visit at ${dbItem.placeName}",
+                Text(text = "Visit at ${item.placeName}",
                     modifier = Modifier.padding(all = 4.dp),
                     style = MaterialTheme.typography.bodyMedium)
             }
@@ -133,6 +128,8 @@ fun ItemDetailsScreen(navController : NavHostController,
 
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ListScreen(
@@ -147,7 +144,7 @@ fun ListScreen(
         CustomToolbar(title = "Food Diary app", openDrawer)
     },
         content = { it ->
-            val itemsList : List<DBItem> by homeViewModel.itemsList.observeAsState(initial = listOf())
+            val itemsList : List<Item> by homeViewModel.itemsList.observeAsState(initial = listOf())
             if (itemsList.isNotEmpty()){
 
                 Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
@@ -156,7 +153,7 @@ fun ListScreen(
                         state = lazyListState
                     ) {
                         items(items = itemsList) { item ->
-                            ItemCard(dbItem = item, navController = navController)
+                            ItemCard(item = item, navController = navController)
                         }
                     }
                 }
@@ -169,7 +166,7 @@ fun ListScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        "No employees onboarded yet.",
+                        "No opinions yet.",
                         fontSize = 20.sp,
                         modifier = Modifier
                             .wrapContentWidth()

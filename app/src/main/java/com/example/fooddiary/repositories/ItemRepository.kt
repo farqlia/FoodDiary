@@ -1,46 +1,46 @@
 package com.example.fooddiary.repositories
 
 import androidx.lifecycle.MutableLiveData
-import com.example.fooddiary.database.CustomDao
-import com.example.fooddiary.database.DBItem
+import com.example.fooddiary.database.ItemDao
+import com.example.fooddiary.database.Item
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MyRepo(private val customDao: CustomDao) {
+class ItemRepository(private val itemDao: ItemDao) {
 
-    val dataList = MutableLiveData<List<DBItem>>()
-    val foundItem = MutableLiveData<DBItem>()
+    val dataList = MutableLiveData<List<Item>>()
+    val foundItem = MutableLiveData<Item>()
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
 
-    fun addItem(item: DBItem) {
+    fun addItem(item: Item) {
         coroutineScope.launch(Dispatchers.IO){
-            customDao.insert(item)
+            itemDao.insert(item)
         }
     }
 
-    fun deleteItem(item: DBItem) {
+    fun deleteItem(item: Item) {
         coroutineScope.launch(Dispatchers.IO){
-            customDao.delete(item)
+            itemDao.delete(item)
         }
     }
 
-    fun updateItem(item: DBItem) {
+    fun updateItem(item: Item) {
         coroutineScope.launch(Dispatchers.IO){
-            customDao.update(item)
+            itemDao.update(item)
         }
     }
 
     fun getAllItems(){
         coroutineScope.launch(Dispatchers.IO){
-            dataList.postValue(customDao.getAll())
+            dataList.postValue(itemDao.getAll())
         }
     }
 
     fun findItemById(id: Int){
         coroutineScope.launch(Dispatchers.IO){
-            foundItem.postValue(customDao.findItemById(id))
+            foundItem.postValue(itemDao.findItemById(id))
         }
     }
 

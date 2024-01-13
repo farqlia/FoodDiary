@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.fooddiary"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.fooddiary"
@@ -63,8 +63,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.room:room-common:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+
+    implementation("androidx.compose.runtime:runtime-livedata")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -72,6 +72,14 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    implementation("androidx.room:room-common:2.6.1")
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    kapt("androidx.room:room-compiler:2.6.1")
+    kapt("android.arch.persistence.room:compiler:1.1.1")
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
 
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")

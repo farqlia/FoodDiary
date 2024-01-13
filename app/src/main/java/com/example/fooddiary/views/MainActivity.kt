@@ -1,20 +1,27 @@
-package com.example.fooddiary
+package com.example.fooddiary.views
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.fooddiary.database.DBItem
-import com.example.fooddiary.items_views.ItemCard
+import androidx.navigation.compose.rememberNavController
+import com.example.fooddiary.R
+import com.example.fooddiary.database.Item
 import com.example.fooddiary.ui.theme.FoodDiaryTheme
+import com.example.fooddiary.viewmodels.HomeViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -24,6 +31,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    AppMainScreen(homeViewModel = homeViewModel)
                 }
             }
         }
@@ -36,9 +44,9 @@ class MainActivity : ComponentActivity() {
 fun ListItemPreview() {
     FoodDiaryTheme {
         Surface{
-            ItemCard(dbItem = DBItem(drawableResource = R.drawable.baseline_coffee_24,
-                title = "Lunch at coffee shop", placeName = "Street Bacacay")
-            )
+            ItemCard(item = Item(drawableResource = R.drawable.baseline_coffee_24,
+                title = "Lunch at coffee shop", placeName = "Street Bacacay"),
+                rememberNavController())
         }
     }
 }

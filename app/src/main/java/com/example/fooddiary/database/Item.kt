@@ -7,11 +7,11 @@ import com.example.fooddiary.R
 import java.io.Serializable
 
 enum class Category {
-    DINNER, BREAKFAST, LUNCH, DRINKS, DESSERT, NONE
+    DINNER, BREAKFAST, LUNCH, NONE
 }
 
-@Entity(tableName="item_table")
-class DBItem : Serializable{
+@Entity(tableName="items")
+class Item : Serializable{
     @PrimaryKey(autoGenerate = true)
     var id = 0
 
@@ -24,21 +24,14 @@ class DBItem : Serializable{
     @ColumnInfo(name="placeName")
     var placeName: String = "Place"
 
-
     @ColumnInfo(name="category")
     var category: Category = Category.NONE
 
     @ColumnInfo(name="satisfaction")
-    var satisfaction: Float = 2.0F
-
-    @ColumnInfo(name="atmosphere")
-    var atmosphere: Int = 0
-
-    @ColumnInfo(name="englishSupport")
-    var englishSupport: Boolean = false
+    var satisfaction: Float = 2.0f
 
     @ColumnInfo(name="petsFriendly")
-    var petsFriendly: Boolean = false
+    var isPetFriendly: Boolean = false
 
     constructor()
 
@@ -46,18 +39,14 @@ class DBItem : Serializable{
                 drawableResource: Int = R.drawable.baseline_food_bank_24,
                 placeName: String = "Saint Paul Square",
                 category: Category = Category.DINNER,
-                satisfaction: Float? = 0.0F,
-                atmosphere: Int? = 0,
-                englishSupport: Boolean? = false,
+                satisfaction: Float? = 0.0f,
                 petsFriendly: Boolean? = false){
         this.title = title
         this.drawableResource = drawableResource
         this.placeName = placeName
         this.category = category
-        this.satisfaction = satisfaction ?: 0.0F
-        this.atmosphere = atmosphere ?: 0
-        this.englishSupport = englishSupport ?: false
-        this.petsFriendly = petsFriendly ?: false
+        this.satisfaction = satisfaction ?: 0.0f
+        this.isPetFriendly = petsFriendly ?: false
     }
 
 
