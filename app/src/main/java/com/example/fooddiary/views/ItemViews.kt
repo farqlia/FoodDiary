@@ -167,13 +167,15 @@ fun ItemDetailsScreen(navController : NavHostController,
                             AppScreens.AddEditItemScreen.route + "?itemId=" + selectedItem.id.toString() + "&isEdit=" + true.toString())
                                      },
                         modifier = Modifier
-                            .weight(1f)
+                            .weight(1f).width(15.dp)
                     ) {
                         Text(text = "Update", fontSize = 16.sp)
                     }
                     Button(onClick = {
                         showDialog.value = true
-                        }) {
+                        },
+                        modifier = Modifier
+                            .weight(1f).width(15.dp)) {
                             Text(text = "Delete", fontSize = 16.sp)
                         }
 

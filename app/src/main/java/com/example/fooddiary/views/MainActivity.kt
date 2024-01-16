@@ -15,12 +15,14 @@ import com.example.fooddiary.R
 import com.example.fooddiary.database.Item
 import com.example.fooddiary.ui.theme.FoodDiaryTheme
 import com.example.fooddiary.viewmodels.HomeViewModel
+import com.example.fooddiary.viewmodels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

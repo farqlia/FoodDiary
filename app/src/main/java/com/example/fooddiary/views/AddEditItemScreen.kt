@@ -88,7 +88,7 @@ fun AddEditItemScreen(navController: NavHostController,
                       homeViewModel: HomeViewModel,
                       itemId: Int?,
                       isEdit: Boolean) {
-    var selectedItem: Item
+    val selectedItem: Item
     val mContext = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     var validationMessageShown by remember { mutableStateOf(false) }
@@ -104,6 +104,7 @@ fun AddEditItemScreen(navController: NavHostController,
     ) { uri: Uri? ->
         imageUri = uri
     }
+    clearAll()
     if (isEdit){
         homeViewModel.findItemById(itemId!!)
         selectedItem = homeViewModel.foundItem.observeAsState().value!!
@@ -180,7 +181,7 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    var myRating by remember { mutableIntStateOf(if (isEdit) selectedItem.satisfaction else 3) }
+                    var myRating by remember { mutableIntStateOf((if (isEdit) itemSatisfaction.toInt() else 3)) }
 
                     RatingBar(
                         currentRating = myRating,
@@ -205,6 +206,7 @@ fun AddEditItemScreen(navController: NavHostController,
                             petsFriendly = itemIsPetFriendly
                         )
                         if (isEdit){
+                            item.id = itemId!!
                             updateItemInDB(navController, homeViewModel, item)
                         } else {
                             addItemToDB(navController, homeViewModel, item)

@@ -83,6 +83,7 @@ fun AppMainScreen(homeViewModel: HomeViewModel) {
                     }
             }){
             Scaffold(
+                /*
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         text = { Text("Show drawer") },
@@ -95,7 +96,7 @@ fun AppMainScreen(homeViewModel: HomeViewModel) {
                             }
                         }
                     )
-                }
+                } */
             ) {
                 contentPadding ->
                 AppRouter(navController = navController, homeViewModel = homeViewModel,
