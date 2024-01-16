@@ -52,13 +52,12 @@ fun AppRouter(
         composable(route = AppScreens.ItemDetailsScreen.route + "/{itemId}",
             arguments = listOf(
                 navArgument("itemId") {
-                    type = NavType.StringType
-                    defaultValue = ""
-                    nullable = true
+                    type = NavType.IntType
+                    defaultValue = 0
                 }
             )) {
             val itemId = it.arguments?.getInt("itemId")
-            ItemDetailsScreen(navController, homeViewModel, itemId)
+            ItemDetailsScreen(navController, homeViewModel, itemId!!)
         }
     }
 }

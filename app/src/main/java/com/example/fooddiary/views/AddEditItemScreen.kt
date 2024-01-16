@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +23,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -39,6 +43,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -175,7 +180,15 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    AtmosphereSlider()
+                    var myRating by remember { mutableIntStateOf(3) }
+
+                    RatingBar(
+                        currentRating = myRating,
+                        onRatingChanged = {
+                            myRating = it
+                            itemSatisfaction = myRating.toFloat()
+                        }
+                    )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
@@ -290,7 +303,6 @@ fun RadioButtonComponent(){
         }
     }
 }
-
 
 @Composable
 fun AtmosphereSlider(minVal: Float = 0f, maxVal: Float = 10f) {

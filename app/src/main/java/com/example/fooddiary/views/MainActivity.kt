@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun ListItemPreview() {
@@ -49,4 +49,4 @@ fun ListItemPreview() {
                 rememberNavController())
         }
     }
-}
+}*/
