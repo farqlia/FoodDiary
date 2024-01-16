@@ -180,7 +180,7 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    var myRating by remember { mutableIntStateOf(3) }
+                    var myRating by remember { mutableIntStateOf(if (isEdit) selectedItem.satisfaction else 3) }
 
                     RatingBar(
                         currentRating = myRating,
@@ -197,25 +197,20 @@ fun AddEditItemScreen(navController: NavHostController,
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(onClick = {
-                        if (isEdited) {
-                            val item = Item(
-                                title = itemTitle,
-                                placeName = itemPlaceName,
-                                category = itemCategory,
-                                satisfaction = itemSatisfaction,
-                                petsFriendly = itemIsPetFriendly
-                            )
-                            if (isEdit){
-                                updateItemInDB(navController, homeViewModel, item)
-                            } else {
-                                addItemToDB(navController, homeViewModel, item)
-                            }
-                            clearAll()
+                        val item = Item(
+                            title = itemTitle,
+                            placeName = itemPlaceName,
+                            category = itemCategory,
+                            satisfaction = itemSatisfaction,
+                            petsFriendly = itemIsPetFriendly
+                        )
+                        if (isEdit){
+                            updateItemInDB(navController, homeViewModel, item)
                         } else {
-                            coroutineScope.launch {
-                                showEditMessage()
-                            }
+                            addItemToDB(navController, homeViewModel, item)
                         }
+                        clearAll()
+
                     }) {
                         Text(
                             text = if (isEdit) "Update Details" else "Add",

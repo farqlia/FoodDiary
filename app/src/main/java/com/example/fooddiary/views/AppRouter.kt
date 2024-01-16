@@ -22,7 +22,7 @@ fun AppRouter(
             ListScreen(navController, homeViewModel, openDrawer)
         }
 
-        composable(route = AppScreens.AddEditItemScreen.route + "?itemId=itemId&isEdit=isEdit",
+        composable(route = AppScreens.AddEditItemScreen.route + "?itemId={itemId}&isEdit={isEdit}",
             arguments = listOf(
                 navArgument("itemId"){
                     type = NavType.IntType

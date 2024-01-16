@@ -164,7 +164,7 @@ fun ItemDetailsScreen(navController : NavHostController,
                     }
                     Button(onClick = {
                         navController.navigate(
-                            AppScreens.AddEditItemScreen.routeWithArgs(selectedItem.id.toString(), true.toString()))
+                            AppScreens.AddEditItemScreen.route + "?itemId=" + selectedItem.id.toString() + "&isEdit=" + true.toString())
                                      },
                         modifier = Modifier
                             .weight(1f)
