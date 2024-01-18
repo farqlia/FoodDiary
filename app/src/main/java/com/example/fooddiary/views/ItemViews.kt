@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.fooddiary.R
 import com.example.fooddiary.database.Item
 import com.example.fooddiary.utils.AppScreens
 import com.example.fooddiary.viewmodels.HomeViewModel
@@ -68,7 +69,7 @@ fun ItemCard(item: Item, navController : NavHostController,
         )){
 
         Image(
-            painter = painterResource(id = item.drawableResource),
+            painter = painterResource(id = R.drawable.baseline_dinner_dining_24),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -125,7 +126,8 @@ fun ItemDetailsScreen(navController : NavHostController,
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    Image(painter = painterResource(id = selectedItem.drawableResource),
+                    // TODO : get real drawable
+                    Image(painter = painterResource(id = R.drawable.baseline_food_bank_24),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

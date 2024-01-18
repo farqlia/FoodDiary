@@ -58,8 +58,6 @@ fun AccountScreen(navController: NavHostController,
             }
         }
         
-    ) {
-        paddingValues -> /* */ 
-    }
+    )
 
 }

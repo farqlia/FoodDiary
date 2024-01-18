@@ -72,14 +72,6 @@ import kotlinx.coroutines.launch
 import java.lang.Math.ceil
 import java.lang.Math.floor
 
-var itemId: Int = -1
-var itemTitle: String = ""
-var itemDrawableResource: Int = 0
-var itemPlaceName : String = ""
-var itemCategory: Category = Category.NONE
-var itemSatisfaction: Float = 0.0F;
-var itemIsPetFriendly: Boolean = false
-
 val MAX_LENGTH = 30
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -104,18 +96,21 @@ fun AddEditItemScreen(navController: NavHostController,
     ) { uri: Uri? ->
         imageUri = uri
     }
-    clearAll()
+
+    var item = Item()
+
     if (isEdit){
         homeViewModel.findItemById(itemId!!)
-        selectedItem = homeViewModel.foundItem.observeAsState().value!!
-        com.example.fooddiary.views.itemId = selectedItem.id
-        itemTitle = selectedItem.title
-        itemCategory = selectedItem.category
-        itemSatisfaction = selectedItem.satisfaction
-        itemDrawableResource = selectedItem.drawableResource
-        itemPlaceName = selectedItem.placeName
-        itemIsPetFriendly = selectedItem.isPetFriendly
+        item = homeViewModel.foundItem.observeAsState().value!!
     }
+
+    var title by remember { mutableStateOf(item.title) }
+    var drawableResource by remember { mutableStateOf(item.drawableResource) }
+    var placeName by remember { mutableStateOf(item.placeName) }
+    var category by remember { mutableStateOf(item.category) }
+    var satisfaction by remember { mutableStateOf(item.satisfaction) }
+    var isPetFriendly by remember { mutableStateOf(item.isPetFriendly) }
+
 
     // Shows the validation message.
     suspend fun showEditMessage() {
@@ -155,7 +150,7 @@ fun AddEditItemScreen(navController: NavHostController,
                             .clip(RoundedCornerShape(50))
                     )
 
-                    SimpleOutlinedTextField(inputWrapper = itemTitle, labelResId = R.string.title,
+                    SimpleOutlinedTextField(inputWrapper = title, labelResId = R.string.title,
                         maxLength = MAX_LENGTH,
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.None,
                             autoCorrect = false,
@@ -163,10 +158,10 @@ fun AddEditItemScreen(navController: NavHostController,
                             imeAction = ImeAction.Next)
                     ) {
                         isEdited = true
-                        itemTitle = it
+                        title = it
                     }
 
-                    SimpleOutlinedTextField(inputWrapper = itemPlaceName, labelResId = R.string.place_name,
+                    SimpleOutlinedTextField(inputWrapper = placeName, labelResId = R.string.place_name,
                         maxLength = MAX_LENGTH,
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.None,
                             autoCorrect = false,
@@ -174,44 +169,103 @@ fun AddEditItemScreen(navController: NavHostController,
                             imeAction = ImeAction.Next)
                     ) {
                         isEdited = true
-                        itemPlaceName = it
+                        placeName = it
                     }
 
-                    RadioButtonComponent()
+                    val options = listOf(Category.DINNER, Category.LUNCH, Category.BREAKFAST)
+                    val (selectedOption, onOptionSelected) = remember {
+                        mutableStateOf(Category.NONE)
+                    }
+                    val mContext = LocalContext.current
+                    Row (
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        options.forEach {
+                                cat ->
+                            Column (Modifier
+                                .fillMaxHeight()
+                                .selectable(
+                                    selected = (cat == selectedOption),
+                                    onClick = {
+                                        onOptionSelected(cat)
+                                        category = cat
+                                        Toast
+                                            .makeText(mContext, cat.name, Toast.LENGTH_LONG)
+                                            .show()
+                                    }
+                                )
+                                .padding(all = 16.dp)
+                            ){
+
+                                RadioButton(selected = (cat == selectedOption),
+                                    onClick = { onOptionSelected(cat)
+                                        category = cat
+
+                                    })
+
+                                Text (
+                                    text = cat.name
+                                )
+                            }
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    var myRating by remember { mutableIntStateOf((if (isEdit) itemSatisfaction.toInt() else 3)) }
+                    var myRating by remember { mutableIntStateOf((if (isEdit) satisfaction.toInt() else 3)) }
 
                     RatingBar(
                         currentRating = myRating,
                         onRatingChanged = {
                             myRating = it
-                            itemSatisfaction = myRating.toFloat()
+                            satisfaction = myRating.toFloat()
                         }
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    IsPetFriendlySwitch()
+                    var checked by remember { mutableStateOf(true) }
+                    Row {
+                        Switch(
+                            checked = checked,
+                            onCheckedChange = {
+                                checked = it
+                                isPetFriendly = checked
+                            },
+                            thumbContent = if (checked) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Filled.Check,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(SwitchDefaults.IconSize),
+                                    )
+                                }
+                            } else {
+                                null
+                            },
+                            modifier = Modifier.padding(vertical = 10.dp)
+                        )
+
+                        Text(
+                            text = "Is Pet Friendly",
+                            style = MaterialTheme.typography.labelMedium)
+                    }
 
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Button(onClick = {
-                        val item = Item(
-                            title = itemTitle,
-                            placeName = itemPlaceName,
-                            category = itemCategory,
-                            satisfaction = itemSatisfaction,
-                            petsFriendly = itemIsPetFriendly
-                        )
+
+                        item.title = title
+                        item.placeName = placeName
+                        item.satisfaction = satisfaction
+                        item.category = category
+                        item.isPetFriendly = isPetFriendly
+
                         if (isEdit){
-                            item.id = itemId!!
                             updateItemInDB(navController, homeViewModel, item)
                         } else {
                             addItemToDB(navController, homeViewModel, item)
                         }
-                        clearAll()
 
                     }) {
                         Text(
@@ -241,15 +295,6 @@ fun updateItemInDB(navController: NavHostController,
     navController.popBackStack()
 }
 
-fun clearAll(){
-    itemId = -1
-    itemTitle = ""
-    itemDrawableResource = 0
-    itemPlaceName = ""
-    itemCategory = Category.NONE
-    itemSatisfaction = 0.0F;
-    itemIsPetFriendly = false
-}
 
 /*
  Text(
@@ -261,7 +306,7 @@ fun clearAll(){
 
 
 @Composable
-fun RadioButtonComponent(){
+fun RadioButtonComponent(item: Item){
     val options = listOf(Category.DINNER, Category.LUNCH, Category.BREAKFAST)
     val (selectedOption, onOptionSelected) = remember {
         mutableStateOf(Category.NONE)
@@ -271,30 +316,30 @@ fun RadioButtonComponent(){
         modifier = Modifier.fillMaxWidth()
     ) {
         options.forEach {
-            category ->
+            cat ->
             Column (Modifier
                 .fillMaxHeight()
                 .selectable(
-                    selected = (category == selectedOption),
+                    selected = (cat == selectedOption),
                     onClick = {
-                        onOptionSelected(category)
-                        itemCategory = category
+                        onOptionSelected(cat)
+                        item.category = cat
                         Toast
-                            .makeText(mContext, category.name, Toast.LENGTH_LONG)
+                            .makeText(mContext, cat.name, Toast.LENGTH_LONG)
                             .show()
                     }
                 )
                 .padding(all = 16.dp)
             ){
 
-                RadioButton(selected = (category == selectedOption),
-                    onClick = { onOptionSelected(category)
-                        itemCategory = category
+                RadioButton(selected = (cat == selectedOption),
+                    onClick = { onOptionSelected(cat)
+                        item.category = cat
 
                     })
 
                 Text (
-                    text = category.name
+                    text = cat.name
                 )
             }
         }
@@ -302,7 +347,7 @@ fun RadioButtonComponent(){
 }
 
 @Composable
-fun AtmosphereSlider(minVal: Float = 0f, maxVal: Float = 10f) {
+fun AtmosphereSlider(item: Item, minVal: Float = 0f, maxVal: Float = 10f) {
     var sliderPosition by remember { mutableFloatStateOf(0f) }
     Column(
         modifier = Modifier.padding(vertical = 10.dp)
@@ -312,7 +357,7 @@ fun AtmosphereSlider(minVal: Float = 0f, maxVal: Float = 10f) {
         Slider(
             value = sliderPosition,
             onValueChange = { sliderPosition = it
-                            itemSatisfaction = sliderPosition},
+                            item.satisfaction = sliderPosition},
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.secondary,
                 activeTrackColor = MaterialTheme.colorScheme.secondary,
@@ -326,14 +371,14 @@ fun AtmosphereSlider(minVal: Float = 0f, maxVal: Float = 10f) {
 }
 
 @Composable
-fun IsPetFriendlySwitch() {
+fun IsPetFriendlySwitch(item: Item) {
     var checked by remember { mutableStateOf(true) }
     Row {
         Switch(
             checked = checked,
             onCheckedChange = {
                 checked = it
-                itemIsPetFriendly = checked
+                item.isPetFriendly = checked
             },
             thumbContent = if (checked) {
                 {

@@ -11,27 +11,27 @@ enum class Category {
 }
 
 @Entity(tableName="items")
-class Item : Serializable{
-    @PrimaryKey(autoGenerate = true)
-    var id = 0
+    class Item : Serializable{
+        @PrimaryKey(autoGenerate = true)
+        var id = 0
 
-    @ColumnInfo(name="title")
-    var title: String = "Title"
+        @ColumnInfo(name="title")
+        var title: String = ""
 
-    @ColumnInfo(name="drawableResource")
-    var drawableResource: Int = 0
+        @ColumnInfo(name="drawableResource")
+        var drawableResource: Int = 0
 
-    @ColumnInfo(name="placeName")
-    var placeName: String = "Place"
+        @ColumnInfo(name="placeName")
+        var placeName: String = ""
 
-    @ColumnInfo(name="category")
-    var category: Category = Category.NONE
+        @ColumnInfo(name="category")
+        var category: Category = Category.NONE
 
-    @ColumnInfo(name="satisfaction")
-    var satisfaction: Float = 2.0f
+        @ColumnInfo(name="satisfaction")
+        var satisfaction: Float = 0.0f
 
-    @ColumnInfo(name="petsFriendly")
-    var isPetFriendly: Boolean = false
+        @ColumnInfo(name="petsFriendly")
+        var isPetFriendly: Boolean = false
 
     constructor()
 

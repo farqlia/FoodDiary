@@ -17,6 +17,8 @@ sealed class AppScreens(val title: String, val route: String, var icon: ImageVec
     object ItemDetailsScreen : AppScreens("Item Details", "itemDetailsScreen", Icons.Default.Home)
 
     object AddEditItemScreen : AppScreens("Add/Edit Item", route = "addEditItemScreen", Icons.Default.AddCircle)
+    
+
 
     fun routeWithArgs(vararg args: String): String {
         return buildString {
