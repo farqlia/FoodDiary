@@ -7,9 +7,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.compose.rememberNavController
 import com.example.fooddiary.R
 import com.example.fooddiary.database.Item
@@ -17,6 +21,9 @@ import com.example.fooddiary.ui.theme.FoodDiaryTheme
 import com.example.fooddiary.viewmodels.HomeViewModel
 import com.example.fooddiary.viewmodels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import com.example.fooddiary.ui.theme.AppTheme
+import kotlinx.coroutines.flow.observeOn
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -27,7 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            FoodDiaryTheme {
+            AppTheme() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),

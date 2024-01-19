@@ -19,8 +19,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.fooddiary.utils.AppScreens
@@ -29,7 +31,10 @@ import kotlinx.coroutines.launch
 
 private val screens = listOf(
     AppScreens.ListScreen,
-    AppScreens.AddEditItemScreen
+    AppScreens.AddEditItemScreen,
+    AppScreens.SwipePhotosScreen,
+    AppScreens.TabScreen,
+    AppScreens.SettingsScreen
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,6 +50,9 @@ fun AppMainScreen(homeViewModel: HomeViewModel) {
                 drawerState.open()
             }
         }
+
+        val context = LocalContext.current
+        val appSettingsManager = remember { AppSettingsManager(context) }
 
         val onDestinationClicked = { route : String ->
             scope.launch {
@@ -99,7 +107,7 @@ fun AppMainScreen(homeViewModel: HomeViewModel) {
                 } */
             ) {
                 contentPadding ->
-                AppRouter(navController = navController, homeViewModel = homeViewModel,
+                AppRouter(navController = navController, homeViewModel = homeViewModel, appSettingsManager = appSettingsManager,
                     openDrawer = { openDrawer() })
                 // Screen Content
             }

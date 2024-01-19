@@ -2,6 +2,7 @@ package com.example.fooddiary.utils
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -18,7 +19,11 @@ sealed class AppScreens(val title: String, val route: String, var icon: ImageVec
 
     object AddEditItemScreen : AppScreens("Add/Edit Item", route = "addEditItemScreen", Icons.Default.AddCircle)
     
+    object SwipePhotosScreen : AppScreens("Swipe Photos", route = "swipePhotos", Icons.Default.Face)
 
+    object TabScreen : AppScreens("Tab Screen", route = "tabScreen", Icons.Default.Home)
+
+    object SettingsScreen : AppScreens("Settings Screen", route = "settingsScreen", Icons.Default.Home)
 
     fun routeWithArgs(vararg args: String): String {
         return buildString {

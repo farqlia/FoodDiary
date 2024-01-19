@@ -45,7 +45,7 @@ fun CustomToolbarWithBackArrow(title: String, navController: NavHostController) 
                 Icon(
                     Icons.Filled.ArrowBack,
                     contentDescription = stringResource(id = R.string.back),
-                    tint = Color.White
+                    tint = MaterialTheme.colorScheme.surfaceTint
                 )
             }
         }

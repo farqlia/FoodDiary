@@ -15,11 +15,24 @@ import com.example.fooddiary.viewmodels.HomeViewModel
 fun AppRouter(
     navController: NavHostController,
     homeViewModel: HomeViewModel,
+    appSettingsManager : AppSettingsManager,
     openDrawer: () -> Unit
 ) {
     NavHost(navController = navController, startDestination = AppScreens.ListScreen.route){
         composable(route = AppScreens.ListScreen.route) {
             ListScreen(navController, homeViewModel, openDrawer)
+        }
+
+        composable(route = AppScreens.SwipePhotosScreen.route){
+            SwipePhotosScreen(navController = navController)
+        }
+
+        composable(route = AppScreens.TabScreen.route){
+            TabScreen(navController = navController, appSettingsManager = appSettingsManager)
+        }
+
+        composable(route = AppScreens.SettingsScreen.route){
+            AppSettingsScreen(appSettingsManager = appSettingsManager)
         }
 
         composable(route = AppScreens.AddEditItemScreen.route + "?itemId={itemId}&isEdit={isEdit}",
