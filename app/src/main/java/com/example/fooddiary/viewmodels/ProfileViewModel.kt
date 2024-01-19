@@ -1,7 +1,5 @@
 package com.example.fooddiary.viewmodels
 
-import androidx.annotation.DrawableRes
-import androidx.compose.runtime.Immutable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

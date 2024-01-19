@@ -3,4 +3,7 @@
     <string name="back">Back</string>
     <string name="title">Title</string>
     <string name="place_name">Place name</string>
+    <string name="icn_camera_view_switch_camera_content_description">camera switch</string>
+    <string name="icn_camera_view_camera_shutter_content_description">shutter</string>
+    <string name="icn_camera_view_view_gallery_content_description">gallery</string>
 </resources>
