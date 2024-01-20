@@ -29,7 +29,8 @@ import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TabScreen(navController: NavHostController, appSettingsManager: AppSettingsManager){
+fun TabScreen(navController: NavHostController, appSettingsManager: AppSettingsManager,
+              userInfoManager : UserInfoManager){
     val tabItems = listOf(
         TabItem("Home", Icons.Outlined.Home, Icons.Filled.Home),
         TabItem("Settings", Icons.Outlined.Settings, Icons.Filled.Settings),
@@ -73,7 +74,9 @@ fun TabScreen(navController: NavHostController, appSettingsManager: AppSettingsM
                         }
                     }
                     when (selectedTabIndex) {
+                        0 -> HomeScreen()
                         1 -> AppSettingsScreen(appSettingsManager)
+                        2 -> UserInfoScreen(userInfoManager)
                     }
                 }
             }

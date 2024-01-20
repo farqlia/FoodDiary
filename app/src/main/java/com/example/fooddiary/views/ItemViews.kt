@@ -20,11 +20,19 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessibilityNew
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.MonochromePhotos
+import androidx.compose.material.icons.filled.NotAccessible
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -35,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -47,9 +56,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.fooddiary.R
+import com.example.fooddiary.database.Category
 import com.example.fooddiary.database.Item
 import com.example.fooddiary.utils.AppScreens
 import com.example.fooddiary.viewmodels.HomeViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -57,6 +68,7 @@ fun ItemCard(item: Item, navController : NavHostController,
              homeViewModel: HomeViewModel){
     Row(modifier = Modifier
         .padding(all = 8.dp)
+        .fillMaxWidth()
         .combinedClickable(
             onClick = {
                 navController.navigate(
@@ -68,7 +80,7 @@ fun ItemCard(item: Item, navController : NavHostController,
         )){
 
         Image(
-            painter = painterResource(id = R.drawable.baseline_dinner_dining_24),
+            painter = painterResource(id = getDrawableBasedOnCategory(item.category)),
             contentDescription = null,
             modifier = Modifier
                 .size(40.dp)
@@ -126,7 +138,7 @@ fun ItemDetailsScreen(navController : NavHostController,
                     Spacer(modifier = Modifier.height(10.dp))
 
                     // TODO : get real drawable
-                    Image(painter = painterResource(id = R.drawable.baseline_food_bank_24),
+                    Image(painter = painterResource(id = getDrawableBasedOnCategory(selectedItem.category)),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -150,8 +162,31 @@ fun ItemDetailsScreen(navController : NavHostController,
                         clickable = false
                     )
 
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        if (selectedItem.isPetFriendly){
+                            Icon(imageVector = Icons.Filled.AccessibilityNew,
+                                contentDescription = null
+                            )
+                        } else {
+                            Icon(imageVector = Icons.Filled.NotAccessible,
+                                contentDescription = null
+                            )
+                        }
+
+                        Text(text = if (selectedItem.isPetFriendly) {
+                            "Accepts pets"
+                        } else {"Don't allow pets"})
+
+                    }
+
                 }
                 Spacer(modifier = Modifier.weight(1f))
+
                 Row(){
                     if (showDialog.value){
                         Alert(
@@ -168,7 +203,8 @@ fun ItemDetailsScreen(navController : NavHostController,
                             AppScreens.AddEditItemScreen.route + "?itemId=" + selectedItem.id.toString() + "&isEdit=" + true.toString())
                                      },
                         modifier = Modifier
-                            .weight(1f).width(15.dp)
+                            .weight(1f)
+                            .width(15.dp)
                     ) {
                         Text(text = "Update", fontSize = 16.sp)
                     }
@@ -176,7 +212,8 @@ fun ItemDetailsScreen(navController : NavHostController,
                         showDialog.value = true
                         },
                         modifier = Modifier
-                            .weight(1f).width(15.dp)) {
+                            .weight(1f)
+                            .width(15.dp)) {
                             Text(text = "Delete", fontSize = 16.sp)
                         }
 
@@ -198,15 +235,27 @@ fun ListScreen(
 ){
     homeViewModel.getAllItems()
     val lazyListState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
     Scaffold (
         topBar = {
         CustomToolbar(title = "Food Diary app", openDrawer)
     },
-        content = { it ->
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text("Add item") },
+                icon = { Icon(Icons.Filled.Add, contentDescription = "") },
+                onClick = {
+                    scope.launch {
+                        navController.navigate(AppScreens.AddEditItemScreen.route)
+                    }
+                }
+            )
+        },
+        content = { paddingValues ->
             val itemsList : List<Item> by homeViewModel.itemsList.observeAsState(initial = listOf())
             if (itemsList.isNotEmpty()){
 
-                Surface(color = Color.White, modifier = Modifier.fillMaxSize()) {
+                Surface(color = Color.White, modifier = Modifier.fillMaxSize().padding(paddingValues)) {
                     LazyColumn(
                         modifier = Modifier.padding(vertical = 4.dp),
                         state = lazyListState
@@ -270,5 +319,14 @@ fun Alert(
                 }
             }
         )
+    }
+}
+
+fun getDrawableBasedOnCategory(category: Category) : Int{
+    return when (category){
+        Category.BREAKFAST -> R.drawable.baseline_coffee_24
+        Category.LUNCH -> R.drawable.baseline_bakery_dining_24
+        Category.DINNER -> R.drawable.baseline_dinner_dining_24
+        else -> R.drawable.baseline_food_bank_24
     }
 }

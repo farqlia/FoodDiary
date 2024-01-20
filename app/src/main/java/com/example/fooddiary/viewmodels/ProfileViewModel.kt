@@ -1,17 +1,33 @@
 package com.example.fooddiary.viewmodels
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.fooddiary.data.meProfile
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(private val dataStore: DataStore<Preferences>) : ViewModel() {
 
-    private val _userData = MutableLiveData<ProfileScreenState>()
-    val userData: LiveData<ProfileScreenState> = _userData
+    private val firstName = stringPreferencesKey("first_name")
+    private val surName = stringPreferencesKey("sur_name")
+    private val description = stringPreferencesKey("description")
 
-    fun setMe(){
-        _userData.value = meProfile
+    private val imageUri = stringPreferencesKey("image_uri")
+
+    val _userData = MutableLiveData<ProfileScreenState>()
+    val _profileImage = MutableLiveData<String>()
+
+    fun request() {
+        viewModelScope.launch {
+            dataStore.data.collectLatest {
+                _userData.value = ProfileScreenState(it[firstName] ?: "", it[surName] ?: "", it[description] ?: "")
+                _profileImage.value = it[imageUri]
+            }
+        }
     }
 
 }
@@ -19,6 +35,6 @@ class ProfileViewModel : ViewModel() {
 
 data class ProfileScreenState(
     val firstName : String,
-    val surName : String
-) {
-}
+    val surName : String,
+    val description : String
+)

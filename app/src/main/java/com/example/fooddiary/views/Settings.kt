@@ -103,6 +103,10 @@ fun AppSettingsScreen(appSettingsManager: AppSettingsManager) {
         }
     }
 
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxSize(0.8f)
@@ -153,15 +157,15 @@ fun AppSettingsScreen(appSettingsManager: AppSettingsManager) {
                     Text("Select Font:")
                     Spacer(modifier = Modifier.width(8.dp))
                     DropdownMenu(
-                        expanded = false,
-                        onDismissRequest = { },
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
                         modifier = Modifier.width(200.dp),
                     ) {
                         // Add font options here
                         DropdownMenuItem(text = {Text("Default")} ,
-                            onClick = { /* Handle selection */ })
+                            onClick = { selectedFont = "Default" },)
                         DropdownMenuItem(text = {Text("Roboto")},
-                            onClick = { /* Handle selection */ })
+                            onClick = { selectedFont = "Roboto" })
                         // Add more fonts as needed
                     }
                 }

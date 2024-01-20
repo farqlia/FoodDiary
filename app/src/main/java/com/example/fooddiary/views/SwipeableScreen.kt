@@ -32,13 +32,15 @@ import androidx.navigation.NavHostController
 import com.example.fooddiary.R
 import kotlinx.coroutines.launch
 
+/*
 val photos = listOf(
     R.drawable.gp, R.drawable.novio, R.drawable.spaghetti_2, R.drawable.spaghetti_3
 )
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun SwipePhotosScreen(navController: NavHostController){
+fun SwipePhotosScreen(navController: NavHostController,
+                      initialPage : Int = 0){
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
@@ -97,4 +99,4 @@ fun SwipePhotosScreen(navController: NavHostController){
         }
 
     )
-}
+}*/

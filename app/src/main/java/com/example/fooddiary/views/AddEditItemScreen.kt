@@ -43,6 +43,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -129,11 +130,15 @@ fun AddEditItemScreen(navController: NavHostController,
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(10.dp)
+                        .padding(padding)
                         .verticalScroll(state = scrollState)
                 ){
                     Image(
-                        painter = painterResource(id = R.drawable.baseline_food_bank_24),
+                        painter = painterResource(id = if (isEdit){
+                            getDrawableBasedOnCategory(item.category)
+                        } else {
+                            R.drawable.baseline_add_task_24
+                        }),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
@@ -165,7 +170,7 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     val options = listOf(Category.DINNER, Category.LUNCH, Category.BREAKFAST)
                     val (selectedOption, onOptionSelected) = remember {
-                        mutableStateOf(Category.NONE)
+                        mutableStateOf(item.category)
                     }
                     val mContext = LocalContext.current
                     Row (
@@ -203,7 +208,7 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    var myRating by remember { mutableIntStateOf((if (isEdit) satisfaction.toInt() else 3)) }
+                    var myRating by remember { mutableIntStateOf(satisfaction.toInt()) }
 
                     RatingBar(
                         currentRating = myRating,
@@ -215,15 +220,13 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    var checked by remember { mutableStateOf(true) }
                     Row {
                         Switch(
-                            checked = checked,
+                            checked = isPetFriendly,
                             onCheckedChange = {
-                                checked = it
-                                isPetFriendly = checked
+                                isPetFriendly = it
                             },
-                            thumbContent = if (checked) {
+                            thumbContent = if (isPetFriendly) {
                                 {
                                     Icon(
                                         imageVector = Icons.Filled.Check,
@@ -244,28 +247,31 @@ fun AddEditItemScreen(navController: NavHostController,
 
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Button(onClick = {
+                    Row(verticalAlignment = Alignment.Bottom){
+                        Button(onClick = {
 
-                        item.title = title
-                        item.placeName = placeName
-                        item.satisfaction = satisfaction
-                        item.category = category
-                        item.isPetFriendly = isPetFriendly
+                            item.title = title
+                            item.placeName = placeName
+                            item.satisfaction = satisfaction
+                            item.category = category
+                            item.isPetFriendly = isPetFriendly
 
-                        if (isEdit){
-                            updateItemInDB(navController, homeViewModel, item)
-                        } else {
-                            addItemToDB(navController, homeViewModel, item)
+                            if (isEdit){
+                                updateItemInDB(navController, homeViewModel, item)
+                            } else {
+                                addItemToDB(navController, homeViewModel, item)
+                            }
+
+                        }) {
+                            Text(
+                                text = if (isEdit) "Update Details" else "Add",
+                                fontSize = 18.sp,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center,
+                            )
                         }
-
-                    }) {
-                        Text(
-                            text = if (isEdit) "Update Details" else "Add",
-                            fontSize = 18.sp,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                        )
                     }
+
                 }
             }
         }
@@ -284,110 +290,4 @@ fun updateItemInDB(navController: NavHostController,
                 item: Item){
     homeViewModel.updateItem(item)
     navController.popBackStack()
-}
-
-
-/*
- Text(
-            text = if (isEdit) "Update Details" else "Add",
-            fontSize = 18.dp,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center
-        )*/
-
-
-@Composable
-fun RadioButtonComponent(item: Item){
-    val options = listOf(Category.DINNER, Category.LUNCH, Category.BREAKFAST)
-    val (selectedOption, onOptionSelected) = remember {
-        mutableStateOf(Category.NONE)
-    }
-    val mContext = LocalContext.current
-    Row (
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        options.forEach {
-            cat ->
-            Column (Modifier
-                .fillMaxHeight()
-                .selectable(
-                    selected = (cat == selectedOption),
-                    onClick = {
-                        onOptionSelected(cat)
-                        item.category = cat
-                        Toast
-                            .makeText(mContext, cat.name, Toast.LENGTH_LONG)
-                            .show()
-                    }
-                )
-                .padding(all = 16.dp)
-            ){
-
-                RadioButton(selected = (cat == selectedOption),
-                    onClick = { onOptionSelected(cat)
-                        item.category = cat
-
-                    })
-
-                Text (
-                    text = cat.name
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun AtmosphereSlider(item: Item, minVal: Float = 0f, maxVal: Float = 10f) {
-    var sliderPosition by remember { mutableFloatStateOf(0f) }
-    Column(
-        modifier = Modifier.padding(vertical = 10.dp)
-    ) {
-        Text(text = "Atmosphere",
-            style = MaterialTheme.typography.labelMedium)
-        Slider(
-            value = sliderPosition,
-            onValueChange = { sliderPosition = it
-                            item.satisfaction = sliderPosition},
-            colors = SliderDefaults.colors(
-                thumbColor = MaterialTheme.colorScheme.secondary,
-                activeTrackColor = MaterialTheme.colorScheme.secondary,
-                inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
-            ),
-            steps = maxVal.toInt() - minVal.toInt() + 1,
-            valueRange = minVal..maxVal
-        )
-        Text(text = sliderPosition.toString())
-    }
-}
-
-@Composable
-fun IsPetFriendlySwitch(item: Item) {
-    var checked by remember { mutableStateOf(true) }
-    Row {
-        Switch(
-            checked = checked,
-            onCheckedChange = {
-                checked = it
-                item.isPetFriendly = checked
-            },
-            thumbContent = if (checked) {
-                {
-                    Icon(
-                        imageVector = Icons.Filled.Check,
-                        contentDescription = null,
-                        modifier = Modifier.size(SwitchDefaults.IconSize),
-                    )
-                }
-            } else {
-                null
-            },
-            modifier = Modifier.padding(vertical = 10.dp)
-        )
-
-        Text(
-            text = "Is Pet Friendly",
-            style = MaterialTheme.typography.labelMedium)
-    }
-
 }

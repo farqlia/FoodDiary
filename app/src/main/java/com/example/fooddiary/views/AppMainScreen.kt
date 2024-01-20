@@ -28,10 +28,10 @@ import kotlinx.coroutines.launch
 private val screens = listOf(
     AppScreens.ListScreen,
     AppScreens.AddEditItemScreen,
-    AppScreens.SwipePhotosScreen,
     AppScreens.TabScreen,
-    AppScreens.SettingsScreen
+    AppScreens.PhotoGalleryScreen
 )
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +49,9 @@ fun AppMainScreen(homeViewModel: HomeViewModel) {
 
         val context = LocalContext.current
         val appSettingsManager = remember { AppSettingsManager(context) }
+        val userInfoManager = remember {
+            UserInfoManager(context)
+        }
 
         val onDestinationClicked = { route : String ->
             scope.launch {
@@ -103,7 +106,7 @@ fun AppMainScreen(homeViewModel: HomeViewModel) {
                 } */
             ) {
                 contentPadding ->
-                AppRouter(navController = navController, homeViewModel = homeViewModel, appSettingsManager = appSettingsManager,
+                AppRouter(navController = navController, homeViewModel = homeViewModel, appSettingsManager = appSettingsManager, userInfoManager = userInfoManager,
                     openDrawer = { openDrawer() })
                 // Screen Content
             }

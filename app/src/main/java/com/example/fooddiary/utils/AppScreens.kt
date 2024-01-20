@@ -4,6 +4,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MonochromePhotos
+import androidx.compose.material.icons.filled.Photo
+import androidx.compose.material.icons.filled.PhotoAlbum
 import androidx.compose.ui.graphics.vector.ImageVector
 
 /*
@@ -18,12 +21,17 @@ sealed class AppScreens(val title: String, val route: String, var icon: ImageVec
     object ItemDetailsScreen : AppScreens("Item Details", "itemDetailsScreen", Icons.Default.Home)
 
     object AddEditItemScreen : AppScreens("Add/Edit Item", route = "addEditItemScreen", Icons.Default.AddCircle)
-    
-    object SwipePhotosScreen : AppScreens("Swipe Photos", route = "swipePhotos", Icons.Default.Face)
 
     object TabScreen : AppScreens("Tab Screen", route = "tabScreen", Icons.Default.Home)
 
     object SettingsScreen : AppScreens("Settings Screen", route = "settingsScreen", Icons.Default.Home)
+
+    object TakePhotoScreen : AppScreens("Take Photo", route="takePhoto", Icons.Filled.MonochromePhotos)
+    object PhotoGalleryScreen : AppScreens("Photo Gallery", route="photoGallery", Icons.Filled.PhotoAlbum)
+
+    object PhotoPreviewScreen : AppScreens("PhotoPreview", route = "photoPreview", Icons.Filled.Photo)
+
+    object SwipeGalleryScreen : AppScreens("SwipeGallery", route="swipeGallery", Icons.Filled.PhotoAlbum)
 
     fun routeWithArgs(vararg args: String): String {
         return buildString {

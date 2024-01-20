@@ -34,9 +34,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
-    private val profileViewModel: ProfileViewModel by viewModels()
 
-    @OptIn(ExperimentalPermissionsApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -46,49 +44,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //AppMainScreen(homeViewModel = homeViewModel)
-                    MainContent(Modifier.fillMaxSize())
+                    AppMainScreen(homeViewModel = homeViewModel)
                 }
             }
         }
     }
 }
 
-@ExperimentalPermissionsApi
-@Composable
-fun MainContent(modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    Permission(
-        permission = android.Manifest.permission.CAMERA,
-        rationale = "You said you wanted a picture, so I'm going to have to ask for permission.",
-        permissionNotAvailableContent = {
-            Column(modifier) {
-                Text("O noes! No Camera!")
-                Spacer(modifier = Modifier.height(8.dp))
-                Button(
-                    onClick = {
-                        context.startActivity(
-                            Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                                data = Uri.fromParts("package", context.packageName, null)
-                            }
-                        )
-                    }
-                ) {
-                    Text("Open Settings")
-                }
-            }
-        }
-    ) {
-        //CameraPreview(modifier)
-        CameraView(onImageCaptured = { uri, fromGallery ->
-            Log.d(TAG, "Image Uri Captured from Camera View")
 
-        }, onError = { imageCaptureException ->
-            {}
-        })
-    }
-
-}
 
 /*
 @Preview(showBackground = true)
