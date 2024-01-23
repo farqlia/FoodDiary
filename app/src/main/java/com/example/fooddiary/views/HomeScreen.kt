@@ -94,12 +94,6 @@ fun HomeScreen() {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = "${userImage.value}",
-            style = MaterialTheme.typography.labelMedium,
-            textAlign = TextAlign.Center
-        )
-
     }
 
 

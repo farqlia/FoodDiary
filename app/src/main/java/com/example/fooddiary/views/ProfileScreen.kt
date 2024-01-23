@@ -59,27 +59,17 @@ class UserInfoManager(context: Context){
         imageUri
     }
 
-    suspend fun updateFirstName(firstName: String) {
-        dataStore.edit { preferences ->
-            preferences[InfoKeys.FIRST_NAME] = firstName
-        }
-    }
-
-    suspend fun updateSurName(surName: String) {
-        dataStore.edit { preferences ->
-            preferences[InfoKeys.SUR_NAME] = surName
-        }
-    }
-
-    suspend fun updateDescription(description: String) {
-        dataStore.edit { preferences ->
-            preferences[InfoKeys.DESCRIPTION] = description
-        }
-    }
-
     suspend fun updateImageUri(imageUri: String) {
         dataStore.edit { preferences ->
             preferences[InfoKeys.IMAGE_URI] = imageUri
+        }
+    }
+
+    suspend fun updateUserProfile(firstName: String, surName: String, description: String){
+        dataStore.edit { preferences ->
+            preferences[InfoKeys.FIRST_NAME] = firstName
+            preferences[InfoKeys.SUR_NAME] = surName
+            preferences[InfoKeys.DESCRIPTION] = description
         }
     }
 
@@ -138,9 +128,7 @@ fun UserInfoScreen(userInfoManager: UserInfoManager) {
         // Button to submit the information
         Button(onClick = {
             coroutineScope.launch {
-                userInfoManager.updateDescription(description)
-                userInfoManager.updateSurName(surname)
-                userInfoManager.updateFirstName(firstName)
+                userInfoManager.updateUserProfile(firstName, surname, description)
             }
             // Handle the submission logic here
             // You can use the values of firstName, surname, and description

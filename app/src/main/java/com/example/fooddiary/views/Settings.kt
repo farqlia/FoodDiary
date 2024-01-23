@@ -2,6 +2,7 @@ package com.example.fooddiary.views
 
 import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +12,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.FontDownload
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material.icons.filled.TextFields
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -43,6 +47,8 @@ import kotlinx.coroutines.launch
 private const val PREFERENCES_NAME = "app_settings"
 
 val Context.dataStore by preferencesDataStore(name = PREFERENCES_NAME)
+
+val fonts = listOf("Default", "Roboto")
 
 data class AppSettings(
     val darkMode: Boolean,
@@ -156,18 +162,28 @@ fun AppSettingsScreen(appSettingsManager: AppSettingsManager) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text("Select Font:")
                     Spacer(modifier = Modifier.width(8.dp))
-                    DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.width(200.dp),
-                    ) {
-                        // Add font options here
-                        DropdownMenuItem(text = {Text("Default")} ,
-                            onClick = { selectedFont = "Default" },)
-                        DropdownMenuItem(text = {Text("Roboto")},
-                            onClick = { selectedFont = "Roboto" })
-                        // Add more fonts as needed
+
+                    Box {
+                        IconButton(
+                            onClick = { expanded = !expanded },
+                            modifier = Modifier.width(200.dp)
+                        ) {
+                            Icon(imageVector = Icons.Filled.FilterList, contentDescription = null)
+                        }
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            modifier = Modifier.width(200.dp),
+                        ) {
+                            fonts.forEach { font ->
+                                DropdownMenuItem(text = {Text(font)} ,
+                                    onClick = { selectedFont = font
+                                        expanded = false},)
+                            }
+                        }
                     }
+
+
                 }
 
                 Row(

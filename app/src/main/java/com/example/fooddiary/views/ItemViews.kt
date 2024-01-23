@@ -105,6 +105,7 @@ fun ItemCard(item: Item, navController : NavHostController,
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemDetailsScreen(navController : NavHostController,
                 homeViewModel : HomeViewModel,
@@ -115,113 +116,121 @@ fun ItemDetailsScreen(navController : NavHostController,
     val showDialog = remember { mutableStateOf(false) }
 
     if (selectedItem != null){
-        Surface(color = Color.White, modifier = Modifier.fillMaxSize()){
-            Card(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(10.dp),
-                elevation = CardDefaults.cardElevation(2.dp),
-                colors = CardDefaults.cardColors(Color.White)
-            ) {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ){
+        Scaffold(
+            topBar = {
+                CustomToolbarWithBackArrow(
+                    title = "Details",
+                    navController = navController
+                )
+            },
+            content = { padding ->
+            Surface(color = Color.White, modifier = Modifier.fillMaxSize()){
+                Card(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    elevation = CardDefaults.cardElevation(2.dp),
+                    colors = CardDefaults.cardColors(Color.White)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ){
 
-                    Text(
-                        text = selectedItem.title,
-                        style=MaterialTheme.typography.titleLarge,
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // TODO : get real drawable
-                    Image(painter = painterResource(id = getDrawableBasedOnCategory(selectedItem.category)),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(140.dp)
-                            .clip(RoundedCornerShape(50)),
+                        Text(
+                            text = selectedItem.title,
+                            style=MaterialTheme.typography.titleLarge,
                         )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                    Text(
-                        text = "Meal took place at ${selectedItem.placeName}",
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    RatingBar(
-                        currentRating = selectedItem.satisfaction.toInt(),
-                        onRatingChanged = {},
-                        clickable = false
-                    )
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        if (selectedItem.isPetFriendly){
-                            Icon(imageVector = Icons.Filled.AccessibilityNew,
-                                contentDescription = null
+                        // TODO : get real drawable
+                        Image(painter = painterResource(id = getDrawableBasedOnCategory(selectedItem.category)),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(140.dp)
+                                .clip(RoundedCornerShape(50)),
                             )
-                        } else {
-                            Icon(imageVector = Icons.Filled.NotAccessible,
-                                contentDescription = null
-                            )
-                        }
 
-                        Text(text = if (selectedItem.isPetFriendly) {
-                            "Accepts pets"
-                        } else {"Don't allow pets"})
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                    }
-
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-                Row(){
-                    if (showDialog.value){
-                        Alert(
-                            navController = navController,
-                            homeViewModel = homeViewModel,
-                            selectedItem = selectedItem,
-                            name = "",
-                            showDialog = showDialog.value,
-                            onDismiss = { showDialog.value = false }
+                        Text(
+                            text = "Meal took place at ${selectedItem.placeName}",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold,
                         )
-                    }
-                    Button(onClick = {
-                        navController.navigate(
-                            AppScreens.AddEditItemScreen.route + "?itemId=" + selectedItem.id.toString() + "&isEdit=" + true.toString())
-                                     },
-                        modifier = Modifier
-                            .weight(1f)
-                            .width(15.dp)
-                    ) {
-                        Text(text = "Update", fontSize = 16.sp)
-                    }
-                    Button(onClick = {
-                        showDialog.value = true
-                        },
-                        modifier = Modifier
-                            .weight(1f)
-                            .width(15.dp)) {
-                            Text(text = "Delete", fontSize = 16.sp)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        RatingBar(
+                            currentRating = selectedItem.satisfaction.toInt(),
+                            onRatingChanged = {},
+                            clickable = false
+                        )
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            if (selectedItem.isPetFriendly){
+                                Icon(imageVector = Icons.Filled.AccessibilityNew,
+                                    contentDescription = null
+                                )
+                            } else {
+                                Icon(imageVector = Icons.Filled.NotAccessible,
+                                    contentDescription = null
+                                )
+                            }
+
+                            Text(text = if (selectedItem.isPetFriendly) {
+                                "Accepts pets"
+                            } else {"Don't allow pets"})
+
                         }
 
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+
+                    Row(){
+                        if (showDialog.value){
+                            Alert(
+                                navController = navController,
+                                homeViewModel = homeViewModel,
+                                selectedItem = selectedItem,
+                                name = "",
+                                showDialog = showDialog.value,
+                                onDismiss = { showDialog.value = false }
+                            )
+                        }
+                        Button(onClick = {
+                            navController.navigate(
+                                AppScreens.AddEditItemScreen.route + "?itemId=" + selectedItem.id.toString() + "&isEdit=" + true.toString())
+                                         },
+                            modifier = Modifier
+                                .weight(1f)
+                                .width(15.dp)
+                        ) {
+                            Text(text = "Update", fontSize = 16.sp)
+                        }
+                        Button(onClick = {
+                            showDialog.value = true
+                            },
+                            modifier = Modifier
+                                .weight(1f)
+                                .width(15.dp)) {
+                                Text(text = "Delete", fontSize = 16.sp)
+                            }
+
+                    }
                 }
             }
-        }
+        })
     }
-
 }
 
 
