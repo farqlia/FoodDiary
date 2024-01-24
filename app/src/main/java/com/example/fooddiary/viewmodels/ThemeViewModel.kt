@@ -4,6 +4,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,12 +15,16 @@ class ThemeViewModel(
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
     private val forceDarkModeKey = booleanPreferencesKey("dark_mode")
+    private val fontFamilyKey = stringPreferencesKey("font_family")
 
-    val state = MutableLiveData<Boolean?>(null)
+    val darkTheme = MutableLiveData<Boolean?>(null)
+    val fontFamily = MutableLiveData<String?>(null)
+
     fun request() {
         viewModelScope.launch {
             dataStore.data.collectLatest {
-                state.value = it[forceDarkModeKey]
+                darkTheme.value = it[forceDarkModeKey]
+                fontFamily.value = it[fontFamilyKey]
             }
         }
     }

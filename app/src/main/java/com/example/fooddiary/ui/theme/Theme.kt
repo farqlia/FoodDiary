@@ -20,7 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.font.FontFamily
 import androidx.core.view.WindowCompat
+import com.example.fooddiary.R
 import com.example.fooddiary.viewmodels.ThemeViewModel
 import com.example.fooddiary.views.dataStore
 
@@ -143,6 +145,10 @@ private val DarkColors = darkColorScheme(
     scrim = md_theme_dark_scrim,
 )
 
+fun getTypography(fontFamily: FontFamily) = androidx.compose.material.Typography(
+    defaultFontFamily = fontFamily
+)
+
 @Composable
 fun AppTheme(
     content: @Composable() () -> Unit
@@ -150,11 +156,12 @@ fun AppTheme(
 
     val context = LocalContext.current
     val viewModel = remember { ThemeViewModel(context.dataStore) }
-    val state = viewModel.state.observeAsState()
-    val value = state.value ?: isSystemInDarkTheme()
+    val darkThemeState = viewModel.darkTheme.observeAsState()
+    val value = darkThemeState.value ?: isSystemInDarkTheme()
+
+    val fontFamilyState = viewModel.fontFamily.observeAsState()
 
     LaunchedEffect(viewModel) { viewModel.request() }
-
 
     DarkThemeValue.current.value = value
     val colors = if (value) {

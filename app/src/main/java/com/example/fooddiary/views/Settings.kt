@@ -177,8 +177,12 @@ fun AppSettingsScreen(appSettingsManager: AppSettingsManager) {
                         ) {
                             fonts.forEach { font ->
                                 DropdownMenuItem(text = {Text(font)} ,
-                                    onClick = { selectedFont = font
-                                        expanded = false},)
+                                    onClick = {
+                                        selectedFont = font
+                                        expanded = false
+                                        coroutineScope.launch {
+                                            appSettingsManager.updateSelectedFont(selectedFont)
+                                        }},)
                             }
                         }
                     }
