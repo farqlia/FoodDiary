@@ -160,7 +160,16 @@ composable(route = AppScreens.ItemDetailsScreen.route + "/{itemId}",
  composable(route = AppScreens.AddEditItemScreen.route + "?itemId={itemId}&isEdit={isEdit}",
   [...]
 ```
-To jest ważne o tyle, że te argumenty są opcjonalne, a składnia jest inna. 
+To jest ważne o tyle, że te argumenty są opcjonalne, a składnia jest inna. To jak posłużyć się taką nawigacją widać w przykładzie
+```android
+Button(onClick = {
+    navController.navigate(
+        AppScreens.AddEditItemScreen.route + "?itemId=" + selectedItem.id.toString() + "&isEdit=" + true.toString())
+                 },
+  [...]
+)
+```
+w `ItemDetailsScreen` w *views/ItemViews.kt*, gdzie przechodzimy z listy elementów do ekranu konkretnego elementu
 
 ### Zmiana preferencji
 Nie używa się *SharedPreferences*, ale czegoś takiego jak *dataStore*. Ja tylko zaimplementowałam zmianę motywu jasny/ciemny, ale mniej więcej przedstawię jak to zrobić
