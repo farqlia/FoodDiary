@@ -175,7 +175,12 @@ w `ItemDetailsScreen` w *views/ItemViews.kt*, gdzie przechodzimy z listy element
 Nie używa się *SharedPreferences*, ale czegoś takiego jak *dataStore*. Ja tylko zaimplementowałam zmianę motywu jasny/ciemny, ale mniej więcej przedstawię jak to zrobić
 
 1. Zdefiniowanie tkz. *Manager*'a, który też jest argumentem do `@Composable`. Ten manager ma funkcje służące do zmiany preferencji, które są w nim zdefiniowane. Te funkcje sprawiają, że w innych miejscach, które **obserwują** stan którejś z preferencji, odpowiednio zmieni się ich stan.
-2. W odpowiednim `@Composable`, gdzie użytkownik może te preferencje zmieniać najpierw pobierane są aktualne wartości tych preferencji
+```android
+class AppSettingsManager(context: Context) 
+```
+W pliku *views/Settings*
+
+3. W odpowiednim `@Composable`, gdzie użytkownik może te preferencje zmieniać najpierw pobierane są aktualne wartości tych preferencji
 ```android
 LaunchedEffect(appSettingsManager.appSettingsFlow) {
         appSettingsManager.appSettingsFlow.collect { appSettings ->
