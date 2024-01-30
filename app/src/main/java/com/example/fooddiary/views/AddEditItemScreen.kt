@@ -72,22 +72,7 @@ fun AddEditItemScreen(navController: NavHostController,
                       homeViewModel: HomeViewModel,
                       itemId: Int?,
                       isEdit: Boolean) {
-    val selectedItem: Item
-    val mContext = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     var validationMessageShown by remember { mutableStateOf(false) }
-
-    var imageUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-    val bitmap = remember {
-        mutableStateOf<Bitmap?>(null)
-    }
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        imageUri = uri
-    }
 
     var item = Item()
 
@@ -97,21 +82,12 @@ fun AddEditItemScreen(navController: NavHostController,
     }
 
     var title by remember { mutableStateOf(item.title) }
-    var drawableResource by remember { mutableStateOf(item.drawableResource) }
     var placeName by remember { mutableStateOf(item.placeName) }
     var category by remember { mutableStateOf(item.category) }
     var satisfaction by remember { mutableStateOf(item.satisfaction) }
     var isPetFriendly by remember { mutableStateOf(item.isPetFriendly) }
 
 
-    // Shows the validation message.
-    suspend fun showEditMessage() {
-        if (!validationMessageShown) {
-            validationMessageShown = true
-            delay(3000L)
-            validationMessageShown = false
-        }
-    }
     val scrollState = rememberScrollState()
     var isEdited by remember { mutableStateOf(false) }
 
